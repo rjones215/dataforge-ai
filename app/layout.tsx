@@ -7,8 +7,8 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
+  title: 'DataForge AI - Premium RLHF Datasets for AI Labs',
+  description: 'The marketplace for high-quality RLHF training datasets. Browse curated datasets from Reddit, arXiv, and StackOverflow for your AI models.',
   generator: 'v0.app',
   icons: {
     icon: [
