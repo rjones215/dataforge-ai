@@ -1,19 +1,68 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { DatasetCard } from '@/components/dataset-card'
 import { DatasetFilters } from '@/components/dataset-filters'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { datasets } from '@/lib/data'
-import type { Domain, Source } from '@/lib/types'
+import type { Dataset, Domain, Source } from '@/lib/types'
 import { Filter, Search } from 'lucide-react'
 
+interface DatasetApiRow {
+  id: string
+  title: string
+  description: string
+  domain: Domain
+  source: Source
+  size: string
+  quality_score: number | string
+  price: number | string
+  download_count: number | string
+  created_at: string
+}
+
 export default function DatasetsPage() {
+  const [datasets, setDatasets] = useState<Dataset[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedDomains, setSelectedDomains] = useState<Domain[]>([])
   const [selectedSources, setSelectedSources] = useState<Source[]>([])
+
+  useEffect(() => {
+    const fetchDatasets = async () => {
+      try {
+        const response = await fetch('/api/datasets')
+        if (!response.ok) {
+          setDatasets([])
+          return
+        }
+
+        const json = await response.json()
+        const rows = Array.isArray(json) ? (json as DatasetApiRow[]) : []
+        const mapped = rows.map((row) => ({
+          id: row.id,
+          title: row.title,
+          description: row.description,
+          domain: row.domain,
+          source: row.source,
+          size: row.size,
+          qualityScore: Number(row.quality_score),
+          price: Number(row.price),
+          downloadCount: Number(row.download_count),
+          createdAt: row.created_at,
+        }))
+        setDatasets(mapped)
+      } catch {
+        setDatasets([])
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchDatasets()
+  }, [])
 
   const filteredDatasets = useMemo(() => {
     return datasets.filter((dataset) => {
@@ -30,7 +79,7 @@ export default function DatasetsPage() {
 
       return matchesSearch && matchesDomain && matchesSource
     })
-  }, [searchQuery, selectedDomains, selectedSources])
+  }, [datasets, searchQuery, selectedDomains, selectedSources])
 
   const activeFilterCount = selectedDomains.length + selectedSources.length
 
@@ -110,7 +159,19 @@ export default function DatasetsPage() {
               </p>
             </div>
 
-            {filteredDatasets.length === 0 ? (
+            {isLoading ? (
+              <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16">
+                <p className="text-lg font-medium text-foreground">Loading datasets...</p>
+              </div>
+            ) : datasets.length === 0 ? (
+              <Card className="border-indigo-500/60 bg-card">
+                <CardContent className="py-12 text-center">
+                  <p className="text-lg font-medium text-foreground">
+                    No datasets yet — check back soon
+                  </p>
+                </CardContent>
+              </Card>
+            ) : filteredDatasets.length === 0 ? (
               <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16">
                 <p className="text-lg font-medium text-foreground">No datasets found</p>
                 <p className="mt-1 text-sm text-muted-foreground">
