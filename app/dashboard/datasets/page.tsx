@@ -19,7 +19,7 @@ interface DatasetApiRow {
   size: string
   quality_score: number | string
   price: number | string
-  download_count: number | string
+  download_count?: number | string | null
   created_at: string
 }
 
@@ -50,7 +50,7 @@ export default function DatasetsPage() {
           size: row.size,
           qualityScore: Number(row.quality_score),
           price: Number(row.price),
-          downloadCount: Number(row.download_count),
+          downloadCount: row.download_count == null ? 0 : Number(row.download_count),
           createdAt: row.created_at,
         }))
         setDatasets(mapped)
