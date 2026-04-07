@@ -1,0 +1,14 @@
+name: Daily ArXiv Scrape
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger ArXiv scrape
+        run: |
+          curl -X GET https://dataforge-ai-production-f2aa.up.railway.app/scrape/arxiv
+          echo "Scrape triggered successfully"
