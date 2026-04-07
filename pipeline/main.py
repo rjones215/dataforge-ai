@@ -103,11 +103,13 @@ def scrape_arxiv() -> dict[str, Any]:
 @app.get("/scrape/courtlistener")
 def scrape_courtlistener() -> dict[str, Any]:
     supabase = _get_supabase_client()
+    headers = {"Authorization": f"Token {os.getenv('COURTLISTENER_API_TOKEN', '')}"}
 
     try:
         response = requests.get(
             "https://www.courtlistener.com/api/rest/v3/opinions/",
             params={"order_by": "-date_filed", "page_size": 20},
+            headers=headers,
             timeout=30,
         )
         response.raise_for_status()
