@@ -12,3 +12,9 @@ jobs:
         run: |
           curl -X GET https://dataforge-ai-production-f2aa.up.railway.app/scrape/arxiv
           echo "Scrape triggered successfully"
+      - name: Trigger Federal Register scrape
+        run: |
+          curl https://dataforge-ai-production-f2aa.up.railway.app/scrape/federal-register
+      - name: Trigger CourtListener scrape
+        run: |
+          curl https://dataforge-ai-production-f2aa.up.railway.app/scrape/courtlistener
