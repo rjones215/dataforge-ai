@@ -1,7 +1,7 @@
 fastapi
 uvicorn
 praw
-arxiv
+arxiv==2.1.3
 requests
 supabase
 python-dotenv
