@@ -45,7 +45,7 @@ def health():
     return {"status": "healthy"}
 
 
-@app.post("/scrape/arxiv")
+@app.get("/scrape/arxiv")
 def scrape_arxiv() -> dict[str, Any]:
     client = arxiv.Client()
     supabase = _get_supabase_client()
