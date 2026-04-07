@@ -8,6 +8,7 @@ import { Database, Menu, X } from 'lucide-react'
 
 const navigation = [
   { name: 'Datasets', href: '/dashboard/datasets' },
+  { name: 'Sample Data', href: '/dashboard/samples' },
   { name: 'Pricing', href: '/pricing' },
   { name: 'Documentation', href: '#' },
 ]
